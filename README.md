@@ -18,6 +18,7 @@ Neet! currently in very early development.
 
 - Ban and ping command
 - Right click to get info about user
+- bot logs
 
 # In Development / Planned
 
@@ -27,7 +28,6 @@ Neet! currently in very early development.
 - messages reports
 - self role command with buttons
 - kick and warn command
-- bots logs
 
 # Bug Reports / Feature Suggestions
 

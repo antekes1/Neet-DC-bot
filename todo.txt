@@ -3,3 +3,5 @@ logging bota
 reportowanie wiad.
 self role command with buttons 
 slash commands: kick, warn, help
+logs on server
+update read me with build

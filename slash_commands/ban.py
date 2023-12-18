@@ -4,7 +4,7 @@ import discord
 from discord import app_commands, Interaction, Member, TextInput, permissions
 from discord import Permissions
 from discord.ext import commands
-from utils.logging_on_server.loggingg import sent_log, get_channell
+from utils.logging_on_server.logging import sent_log, get_channel
 class ban(commands.Cog):
 
     def __init__(self, client: commands.Bot):

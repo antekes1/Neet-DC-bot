@@ -6,13 +6,13 @@ from discord import app_commands, Interaction, Member, TextInput, permissions
 from discord import Permissions
 from discord.ext import commands
 
-def get_channell(self, server):
+def get_channel(self, server):
     server = str(server)
-    serwers = []
+    servers = []
     for file in os.listdir("servers/"):
-        serwers.append(file)
+        servers.append(file)
     #błąd przy konwersji na str
-    if server in serwers:
+    if server in servers:
         file_path = "servers/" + server + '/config.json'
         with open(file_path, 'r') as config_file:
             info = json.load(config_file)
@@ -22,17 +22,17 @@ def get_channell(self, server):
         return None
 
 async def sent_log(self, interaction: discord.Interaction, message, server, client):
-    channel_id = get_channell(self, server)
+    channel_id = get_channel(self, server)
     if channel_id != None:
         channel = interaction.channel.guild.get_channel(int(channel_id))
         await channel.send(embed=message)
 
 async def set_logs_channel(self, interaction: discord.Interaction, server, channel):
     server = str(server)
-    serwers = []
+    servers = []
     for file in os.listdir("servers/"):
-        serwers.append(file)
-    if server in serwers:
+        servers.append(file)
+    if server in servers:
         return ['updated', 'False']
     else:
         os.mkdir(f'servers/{server}')
@@ -44,9 +44,9 @@ async def set_logs_channel(self, interaction: discord.Interaction, server, chann
 
 async def logs_status(self, interaction: discord.Interaction, server):
     server = str(server)
-    serwers = []
+    servers = []
     for file in os.listdir("servers/"):
-        serwers.append(file)
+        servers.append(file)
     if server in serwers:
         file_path = "servers/" + server + '/config.json'
         with open(file_path, 'r') as config_file:

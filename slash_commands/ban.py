@@ -25,11 +25,11 @@ class ban(commands.Cog):
             if reason == None:
                 reason = "no reason"
             channel = await user.create_dm()
-            await channel.send(f"You had been baned on **{interaction.guild.name}** reason: {reason}")
+            await channel.send(f"You have been baned on **{interaction.guild.name}** reason: {reason}")
             await user.ban(reason=reason)
             await interaction.response.send_message(f'Banned user {user.mention} for {reason}')
-            embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Ban a {user.mention}')
-            embed1.set_footer(text="Logs by Neet! discord bot")
+            embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Banned {user.mention}')
+            embed1.set_footer(text="Logs by Neet!")
             embed1.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
             embed1.add_field(name="reason", value=reason, inline=False)
             await sent_log(self, server=interaction.guild.id, message=embed1, interaction=interaction, client=self.client)

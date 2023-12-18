@@ -4,7 +4,7 @@ import discord
 from discord import app_commands, Interaction, Member, TextInput, permissions
 from discord import Permissions
 from discord.ext import commands
-from utils.logging_on_server.loggingg import sent_log, get_channell
+from utils.logging_on_server.logging_utils import sent_log
 class ban(commands.Cog):
 
     def __init__(self, client: commands.Bot):
@@ -25,11 +25,11 @@ class ban(commands.Cog):
             if reason == None:
                 reason = "no reason"
             channel = await user.create_dm()
-            await channel.send(f"You had been baned on **{interaction.guild.name}** reason: {reason}")
+            await channel.send(f"You have been baned on **{interaction.guild.name}** reason: {reason}")
             await user.ban(reason=reason)
             await interaction.response.send_message(f'Banned user {user.mention} for {reason}')
             embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Ban a {user.mention}')
-            embed1.set_footer(text="Logs by Neet! discord bot")
+            embed1.set_footer(text="Logs by Neet!")
             embed1.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
             embed1.add_field(name="reason", value=reason, inline=False)
             await sent_log(self, server=interaction.guild.id, message=embed1, interaction=interaction, client=self.client)

@@ -7,7 +7,7 @@ class ping(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @app_commands.command(name='ping', description="This is ping command")
+    @app_commands.command(name='ping', description="This is the ping command")
     async def ping(self, interaction: discord.Interaction):
         await interaction.response.send_message(f'pong {interaction.user.mention}')
 

@@ -24,21 +24,21 @@ class setupp(commands.Cog):
         embed.set_author(name="Setup")
         status = await logs_status(self, interaction, server=interaction.guild.id)
         if status == True:
-            embed.add_field(name="Logs status", value="Logging is turned on", inline=False)
+            embed.add_field(name="Logs status", value="Logs are turned on", inline=False)
         else:
-            embed.add_field(name="Logs status", value="Logging is not setup", inline=False)
+            embed.add_field(name="Logs status", value="Logs are not set up", inline=False)
         if logs_channel != None:
             status = await set_logs_channel(self, server=interaction.guild.id, channel=logs_channel.id, interaction=interaction)
             if status[0] == 'created' and status[1] == 'True':
-                embed.add_field(name="Setup logs channel", value="Created succesfull", inline=False)
+                embed.add_field(name="Setting up logs", value="Created succesfull", inline=False)
 
-                embed1 = discord.Embed(colour=discord.Colour.green(), title="Setup logs", description=f'Logs setup succesfully =)')
-                embed1.set_footer(text="Logs by Neet! discord bot")
+                embed1 = discord.Embed(colour=discord.Colour.green(), title="Logging setup", description=f'Logs set up succesfully =)')
+                embed1.set_footer(text="Logs by Neet!")
                 embed1.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
 
                 await sent_log(self, server=interaction.guild.id, message=embed1, interaction=interaction, client=self.client)
             else:
-                embed.add_field(name="Setup logs channel", value="Failed", inline=False)
+                embed.add_field(name="Setting up logs", value="Failed", inline=False)
         embed.set_footer(text="Neet!")
         await interaction.response.send_message(embed=embed)
 

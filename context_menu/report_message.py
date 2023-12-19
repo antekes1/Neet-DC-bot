@@ -17,7 +17,7 @@ class reporting_message(commands.Cog):
         info = await sent_report(self, server=interaction.guild.id, user=interaction.user, message=message, reason="not supported now", interaction=interaction)
         if info[0] == True:
             embed = discord.Embed(colour=discord.Colour.green(), title="Success", description="Message reported")
-            await interaction.response.send_message(embed)
+            await interaction.response.send_message(embed=embed)
         else:
             embed = discord.Embed(colour=discord.Colour.red(), title="Error", description=info[1])
             await interaction.response.send_message(embed=embed)

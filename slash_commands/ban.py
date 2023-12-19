@@ -20,7 +20,7 @@ class ban(commands.Cog):
             await interaction.response.send_message(embed=temp_embed)
         elif user.id == interaction.user.id:
             temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban yourself")
-            await interaction.response.send_message(temp_embed)
+            await interaction.response.send_message(embed=temp_embed)
         elif not interaction.user.guild_permissions.administrator:
             temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban bacause you are not an admin =((")
             await interaction.response.send_message(embed=temp_embed)

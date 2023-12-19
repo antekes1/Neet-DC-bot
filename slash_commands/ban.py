@@ -16,13 +16,13 @@ class ban(commands.Cog):
     async def ban(self, interaction: discord.Interaction,
                   user: Member, reason: str = None):
         if user.guild_permissions.administrator:
-            temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban an admin =((")
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="❌ Error", description="You can't ban an admin =((")
             await interaction.response.send_message(embed=temp_embed)
         elif user.id == interaction.user.id:
-            temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban yourself")
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="❌ Error", description="You can't ban yourself")
             await interaction.response.send_message(embed=temp_embed)
         elif not interaction.user.guild_permissions.administrator:
-            temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban bacause you are not an admin =((")
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="❌ Error", description="You can't ban bacause you are not an admin =((")
             await interaction.response.send_message(embed=temp_embed)
         else:
             if reason == None:
@@ -30,7 +30,7 @@ class ban(commands.Cog):
             channel = await user.create_dm()
             await channel.send(f"You have been baned on **{interaction.guild.name}** reason: {reason}")
             await user.ban(reason=reason)
-            await interaction.response.send_message(f'Banned user {user.mention} for {reason}')
+            await interaction.response.send_message(f'✅ Banned user {user.mention} for {reason}')
             embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Ban a {user.mention}')
             embed1.set_footer(text="Logs by Neet!")
             embed1.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)

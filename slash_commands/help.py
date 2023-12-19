@@ -6,26 +6,22 @@ from discord.ext import commands
 from discord.app_commands import Choice, choices
 from discord.ext.commands import Bot
 
-
-
 class help(commands.Cog):
 
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.bot = commands.Bot
 
     @app_commands.command(name='help', description="Help command")
-    @app_commands.choices(command=[
-        app_commands.Choice(name="ping", value="ping"),
-    ])
-    async def help(self, interaction: discord.Interaction, command: app_commands.Choice[str] = None):
+    # @app_commands.choices(command=[
+    #     app_commands.Choice(name="ping", value="ping"),
+    # ])
+    async def help(self, interaction: discord.Interaction):
         embed = discord.Embed(colour=discord.Colour.blurple())
         embed.set_author(name="Help")
-        if command != None:
-            aaa = command.value
-            for commandd in self.client.commands:
-                print(commandd.name)
-            descr = commands.Bot.commands
-            print(descr)
+        # for command in self.bot.walk_commands()
+        #     if isinstance(command, commands.Command):
+        #         embed.add_field(name=command.name, value=command.help, inline=False)
         embed.add_field(name="Support server: ", value="https://discord.gg/mC2w6AaA")
         await interaction.response.send_message(embed=embed)
 

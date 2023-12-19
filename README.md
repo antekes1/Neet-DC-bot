@@ -31,6 +31,21 @@ Neet! currently in very early development.
 - playing music on vc
 - fixing bugs ;)
 
+# Building
+
+Download the source code using:
+
+```bash
+pip install discord.py
+git clone https://github.com/anetkes1/Neet-DC-bot
+```
+
+cd into the directory and run:
+
+```bash
+python3 main.py
+```
+
 # Bug Reports / Feature Suggestions
 
 [Open an issue](https://github.com/antekes1/Neet-DC-bot/issues) or join

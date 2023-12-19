@@ -19,15 +19,17 @@ Neet! currently in very early development.
 - Ban and ping command
 - Right click to get info about user
 - bot logs
+- messages report
 
 # In Development / Planned
 
 - Tempban
 - Web UI
 - AI chat
-- messages reports
 - self role command with buttons
 - kick and warn command
+- playing music on vc
+- fixing bugs ;)
 
 # Bug Reports / Feature Suggestions
 

@@ -1,5 +1,4 @@
 Temp ban
-logging bota 
 reportowanie wiad.
 self role command with buttons 
 slash commands: kick, warn, help

@@ -16,9 +16,11 @@ class reporting_message(commands.Cog):
     async def report_message(self, interaction: discord.Interaction, message: discord.Message):
         info = await sent_report(self, server=interaction.guild.id, user=interaction.user, message=message, reason="not supported now", interaction=interaction)
         if info[0] == True:
-            await interaction.response.send_message(f'Message reported')
+            embed = discord.Embed(colour=discord.Colour.green(), title="Success", description="Message reported")
+            await interaction.response.send_message(embed)
         else:
-            await interaction.response.send_message(info[1])
+            embed = discord.Embed(colour=discord.Colour.red(), title="Error", description=info[1])
+            await interaction.response.send_message(embed=embed)
 
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(reporting_message(client))

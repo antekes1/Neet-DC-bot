@@ -16,11 +16,14 @@ class ban(commands.Cog):
     async def ban(self, interaction: discord.Interaction,
                   user: Member, reason: str = None):
         if user.guild_permissions.administrator:
-            await interaction.response.send_message("You can't ban an admin =((")
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban an admin =((")
+            await interaction.response.send_message(embed=temp_embed)
         elif user.id == interaction.user.id:
-            await interaction.response.send_message("You can't ban yourself")
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban yourself")
+            await interaction.response.send_message(temp_embed)
         elif not interaction.user.guild_permissions.administrator:
-            await interaction.response.send_message("You can't ban bacause you are not an admin =((")
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="Error", description="You can't ban bacause you are not an admin =((")
+            await interaction.response.send_message(embed=temp_embed)
         else:
             if reason == None:
                 reason = "no reason"

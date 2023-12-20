@@ -5,6 +5,8 @@ import discord
 from discord import app_commands, Interaction, Member, TextInput, permissions
 from discord import Permissions
 from discord.ext import commands
+from discord.ui import Button, View
+from utils.logging_on_server.logging_utils import sent_log
 
 def get_channel(self, server):
     server = str(server)
@@ -23,20 +25,61 @@ def get_channel(self, server):
     else:
         return None
 
+class MyView(View):
+    def __init__(self, member, reason, interaction, client: commands.Bot):
+        super().__init__()
+        self.user = member
+        self.reason = reason
+        self.interaction = interaction
+        self.client = client
+
+    #naprawić permisje i wiadomości
+    async def ban_user(self):
+        try:
+            if self.interaction.user.guild_permissions.administrator:
+                channel = await self.user.create_dm()
+                await self.user.ban(reason=self.reason)
+                await channel.send(f"You have been baned on **{self.interaction.guild.name}** reason: {self.reason}")
+                embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Ban a {self.user.mention}')
+                embed1.set_footer(text="Logs by Neet!")
+                try:
+                    embed1.set_author(name=self.interaction.user.name, icon_url=self.interaction.user.avatar.url)
+                except:
+                    embed1.set_author(name=self.interaction.user.name)
+                embed1.add_field(name="reason", value=self.reason, inline=False)
+                await sent_log(self, server=self.interaction.guild.id, message=embed1, interaction=self.interaction, client=self.client)
+                return True
+            else:
+                return False
+        except:
+            return False
+
+    @discord.ui.button(label="Ban user", style=discord.ButtonStyle.danger, emoji="⛔")
+    async def button_callback(self, button, interaction):
+        output = await self.ban_user()
+        if output != False:
+            button.disabled = True
+            button.label = "Banned"
+
 async def sent_report(self, interaction: discord.Interaction, server, user, reason, message):
     channel_id = get_channel(self, server)
     if channel_id != None:
         channel = interaction.channel.guild.get_channel(channel_id)
         if message.author.id != interaction.client.user.id:
             embed = discord.Embed(colour=discord.Colour.dark_red(), title="Message report", description=f'User {user.name} reported a message form user {message.author.name}')
-            embed.set_author(name=user.name, icon_url=user.avatar.url)
+            try:
+                embed.set_author(name=user.name, icon_url=user.avatar.url)
+            except:
+                embed.set_author(name=user.name)
             embed.add_field(name='Content: ', value='`' + message.content + '`')
             embed.add_field(name="Reason: ", value=reason, inline=False)
             embed.set_footer(text="Logs by Neet!")
             if message.embeds:
                 embed.add_field(name='Embeds: ', value='￬ available down')
                 #await channel.send(embed=embed)
-            await channel.send(embed=embed)
+            #### add buttons ####
+            view = MyView(member=message.author, reason=reason, interaction=interaction, client=commands.Bot)
+            await channel.send(embed=embed, view=view)
             return [True]
         else:
             return [False, "You can't report bot message"]

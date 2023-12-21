@@ -16,13 +16,12 @@ class clear(commands.Cog):
             info = "all"
         else:
             info = int(count)
-
-        if count == None:
-            z = await interaction.channel.purge(limit=count)
-        else:
-           z = await interaction.channel.purge(limit=10000000000)
         embed1 = discord.Embed(colour=discord.Colour.blue(), title=f"Clear {info}", description="Clearing ...")
         await interaction.response.send_message(embed=embed1, ephemeral=True)
+        if count != None:
+            z = await interaction.channel.purge(limit=count)
+        else:
+            z = await interaction.channel.purge(limit=1000000000000)
 
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(clear(client))

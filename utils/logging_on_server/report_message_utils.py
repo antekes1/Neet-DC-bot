@@ -26,42 +26,62 @@ def get_channel(self, server):
         return None
 
 class MyView(View):
-    def __init__(self, member, reason, interaction, client: commands.Bot):
+    def __init__(self, member, reason, rep_interaction, client: commands.Bot, log_interaction):
         super().__init__()
         self.user = member
         self.reason = reason
-        self.interaction = interaction
+        self.interaction = rep_interaction
         self.client = client
+        self.log_interaction = log_interaction
 
     #naprawić permisje i wiadomości
-    async def ban_user(self):
-        try:
-            if self.interaction.user.guild_permissions.administrator:
-                channel = await self.user.create_dm()
-                await self.user.ban(reason=self.reason)
-                await channel.send(f"You have been baned on **{self.interaction.guild.name}** reason: {self.reason}")
-                embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Ban a {self.user.mention}')
-                embed1.set_footer(text="Logs by Neet!")
-                try:
-                    embed1.set_author(name=self.interaction.user.name, icon_url=self.interaction.user.avatar.url)
-                except:
-                    embed1.set_author(name=self.interaction.user.name)
-                embed1.add_field(name="reason", value=self.reason, inline=False)
-                await sent_log(self, server=self.interaction.guild.id, message=embed1, interaction=self.interaction, client=self.client)
-                return True
-            else:
-                return False
-        except:
+    async def ban_user(self, interaction):
+        if self.user.guild_permissions.administrator:
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="❌ Error",
+                                       description="You can't ban an admin =((")
+            # await self.interaction.response.send_message(embed=temp_embed, ephemeral=True)
+            return False
+        elif interaction.user.guild_permissions.administrator:
+            channel = await self.user.create_dm()
+            await self.user.ban(reason=self.reason)
+            await channel.send(f"You have been baned on **{self.interaction.guild.name}** reason: {self.reason}")
+            embed1 = discord.Embed(colour=discord.Colour.red(), title="Ban", description=f'Ban a {self.user.mention}')
+            embed1.set_footer(text="Logs by Neet!")
+            try:
+                embed1.set_author(name=self.interaction.user.name, icon_url=self.interaction.user.avatar.url)
+            except:
+                embed1.set_author(name=self.interaction.user.name)
+            embed1.add_field(name="reason", value=self.reason, inline=False)
+            await sent_log(self, server=self.interaction.guild.id, message=embed1, interaction=self.interaction, client=self.client)
+            return True
+        else:
+            temp_embed = discord.Embed(colour=discord.Colour.red(), title="❌ Error",
+                                       description="You can't ban an admin =((")
             return False
 
-    @discord.ui.button(label="Ban user", style=discord.ButtonStyle.danger, emoji="⛔")
-    async def button_callback(self, button, interaction):
-        output = await self.ban_user()
+    @discord.ui.button(label="Ban user", style=discord.ButtonStyle.danger, emoji="⛔", custom_id="ban_user_btn")
+    async def button_callback(self, interaction: discord.Interaction, button: discord.Button):
+        output = await self.ban_user(interaction=interaction)
         if output != False:
             button.disabled = True
             button.label = "Banned"
+            button_1 = [x for x in self.children if x.custom_id=="ignore_btn"][0]
+            button_1.disabled = True
+            emb = interaction.message.embeds[0]
+            await interaction.response.edit_message(embed=emb, view=self)
+
+    @discord.ui.button(label="It's fine", style=discord.ButtonStyle.green, custom_id='ignore_btn')
+    async def fine_button_callback(self, interaction: discord.Interaction, button: discord.Button):
+        if interaction.user.guild_permissions.administrator:
+            button.disabled = True
+            button.label = "Oki !!!"
+            button_1 = [x for x in self.children if x.custom_id == "ban_user_btn"][0]
+            button_1.disabled = True
+            emb = interaction.message.embeds[0]
+            await interaction.response.edit_message(embed=emb, view=self)
 
 async def sent_report(self, interaction: discord.Interaction, server, user, reason, message):
+    this_interaction = Interaction
     channel_id = get_channel(self, server)
     if channel_id != None:
         channel = interaction.channel.guild.get_channel(channel_id)
@@ -78,7 +98,7 @@ async def sent_report(self, interaction: discord.Interaction, server, user, reas
                 embed.add_field(name='Embeds: ', value='￬ available down')
                 #await channel.send(embed=embed)
             #### add buttons ####
-            view = MyView(member=message.author, reason=reason, interaction=interaction, client=commands.Bot)
+            view = MyView(member=message.author, reason=reason, rep_interaction=interaction, client=commands.Bot, log_interaction=this_interaction)
             await channel.send(embed=embed, view=view)
             return [True]
         else:

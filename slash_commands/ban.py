@@ -13,6 +13,7 @@ class ban(commands.Cog):
 
     #naprawić permisje tak aby nie wywalało missing permission
     async def ban_user(self, interaction, user, reason):
+
         if user.guild_permissions.administrator:
             temp_embed = discord.Embed(colour=discord.Colour.red(), title="❌ Error",
                                        description="You can't ban an admin =((")

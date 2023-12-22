@@ -93,10 +93,18 @@ async def sent_report(self, interaction: discord.Interaction, server, user, reas
                 embed.set_author(name=user.name)
             embed.add_field(name='Content: ', value='`' + message.content + '`')
             embed.add_field(name="Reason: ", value=reason, inline=False)
+            embed.add_field(name="message_id", value=message.id, inline=False)
             embed.set_footer(text="Logs by Neet!")
             if message.embeds:
                 embed.add_field(name='Embeds: ', value='￬ available down')
                 #await channel.send(embed=embed)
+            ### adding usage of report to the reports.json
+            file_path = "servers/" + str(server) + '/reports.json'
+            with open(file_path, 'r') as config_file:
+                info = json.load(config_file)
+            info.append(message.id)
+            with open(file_path, 'w') as config_file:
+                info = json.dump(info, config_file)
             #### add buttons ####
             view = MyView(member=message.author, reason=reason, rep_interaction=interaction, client=commands.Bot, log_interaction=this_interaction)
             await channel.send(embed=embed, view=view)
@@ -106,12 +114,44 @@ async def sent_report(self, interaction: discord.Interaction, server, user, reas
     else:
         return [False, "This funtion is not available on your server"]
 
-async def set_rep_channel(self, interaction: discord.Interaction, server, channel):
+async def check_report(self, interaction, message, server):
     server = str(server)
     serwers = []
     for file in os.listdir("servers/"):
         serwers.append(file)
+
     if server in serwers:
+        file_path = "servers/" + server + '/reports.json'
+        with open(file_path, 'r') as config_file:
+            info = json.load(config_file)
+        if message.id in info:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+######
+#config rep
+######
+async def set_rep_channel(self, interaction: discord.Interaction, server, channel):
+    server = str(server)
+    servers = []
+    for file in os.listdir("servers/"):
+        servers.append(file)
+
+    rep_chat = False
+    if server in servers:
+        file_path = "servers/" + server + '/config.json'
+        data = {"rep_chat": channel}
+        with open(file_path, 'r') as config_file:
+            info = json.load(config_file)
+        if "rep_chat" in info:
+            rep_chat = True
+        else:
+            rep_chat = False
+
+    if server in servers:
         file_path = "servers/" + server + '/config.json'
         data = {"rep_chat": channel}
         with open(file_path, 'r') as config_file:
@@ -120,13 +160,25 @@ async def set_rep_channel(self, interaction: discord.Interaction, server, channe
         to_save = info
         with open(file_path, 'w') as config_file:
             json.dump(info, config_file)
-        return ['updated', 'True']
+        if rep_chat != True:
+            data2 = []
+            file_path2 = "servers/" + server + '/reports.json'
+            with open(file_path2, 'w') as config_file2:
+                json.dump(data2, config_file2)
+            return ['created', 'True']
+        else:
+            return ['updated', 'True']
     else:
         os.mkdir(f'servers/{server}')
         file_path = "servers/" + server + '/config.json'
         data = {"rep_chat": channel}
         with open(file_path, 'w') as config_file:
             json.dump(data, config_file)
+        print('hejaaa')
+        data2 = []
+        file_path2 = "servers/" + server + '/reports.json'
+        with open(file_path2, 'w') as config_file2:
+            json.dump(data2, config_file2)
         return ['created', 'True']
 
 async def rep_status(self, interaction: discord.Interaction, server):

@@ -6,7 +6,7 @@ from discord._types import ClientT
 from discord.ui import Select
 from discord.ext import commands
 from discord.ext.commands import bot
-from utils.logging_on_server.report_message_utils import sent_report
+from utils.logging_on_server.report_message_utils import sent_report, check_report
 
 class RepSelect(Select):
     def __init__(self, bot: commands.Bot, message, user, interaction):
@@ -18,6 +18,9 @@ class RepSelect(Select):
                 ),
                 discord.SelectOption(
                     label="mass ping", value='mass ping'
+                ),
+                discord.SelectOption(
+                    label="else reason", value='else reason'
                 ),
             ]
         )
@@ -42,6 +45,7 @@ class DropdownView(discord.ui.View):
         super().__init__(timeout=60)
         self.add_item(dropdown)
 
+####komenda
 class reporting_message(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
@@ -52,9 +56,14 @@ class reporting_message(commands.Cog):
         self.bot.tree.add_command(self.ctx_menu)
 
     async def report_message(self, interaction: discord.Interaction, message: discord.Message):
-        dropdown = RepSelect(message=message, user=interaction.user, interaction=interaction, bot=commands.Bot)
-        view = DropdownView(dropdown)
-        await interaction.response.send_message("Select a reason", view=view, ephemeral=True)
+        info = await check_report(self, interaction, message, server=interaction.guild.id)
+        if info == False:
+            dropdown = RepSelect(message=message, user=interaction.user, interaction=interaction, bot=commands.Bot)
+            view = DropdownView(dropdown)
+            await interaction.response.send_message("Select a reason", view=view, ephemeral=True)
+        else:
+            tempEmbed = discord.Embed(title="Sorry", description="That message has been already reported")
+            await interaction.response.send_message(embed=tempEmbed, ephemeral=True)
 
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(reporting_message(client))
